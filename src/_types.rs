@@ -39,7 +39,12 @@ impl Container{
     }
 
     pub fn get_one(&mut self) -> Item{
-        let idx = self.rng.next_u32() as u8;
-        self.items.swap_remove(idx as usize)
+        let mut idx = self.rng.next_u32() as u8;
+        if idx < 254{
+            self.items.swap_remove(idx as usize)
+        } else {
+            idx /= self.rng.next_u32() as u8;
+            self.items.swap_remove(idx as usize)
+        }
     }
 }

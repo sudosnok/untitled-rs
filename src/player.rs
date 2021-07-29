@@ -1,4 +1,4 @@
-
+use std::fmt::{self, Display};
 
 use serde::Deserialize;
 use serde_json;
@@ -9,7 +9,14 @@ use super::_types::{Item};
 
 #[derive(Deserialize, Debug)]
 #[allow(unused)]
-struct PlayerStats{atk: u8, def: u8, hp: u16, max_weight: u16, xp_remaining: u16}
+pub struct PlayerStats{
+    atk: u8, 
+    def: u8, 
+    hp: u16, 
+    max_weight: u16, 
+    xp_remaining: u16,
+    level: u8,
+}
 #[allow(unused)]
 impl PlayerStats{
     fn default_player() -> serde_json::Result<Self>{
@@ -18,7 +25,8 @@ impl PlayerStats{
             "def": 5,
             "hp": 50,
             "max_weight": 70,
-            "xp_remaining": 45
+            "xp_remaining": 45,
+            "level": 1
         }"#;
         let stat: PlayerStats = match serde_json::from_str(data){
             Ok(stat) => stat,
@@ -31,7 +39,7 @@ impl PlayerStats{
 
 #[derive(Debug)]
 #[allow(unused)]
-pub struct Player{name: String, stats: PlayerStats, inventory: Vec<Item>, rng: ThreadRng}
+pub struct Player{name: String, pub stats: PlayerStats, pub inventory: Vec<Item>, rng: ThreadRng}
 #[allow(unused)]
 impl Player{
     pub fn new() -> Self{
@@ -62,6 +70,11 @@ impl Player{
         } else {
             println!("Empty bag!");
         }
+    }
+}
+impl Display for Player{
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result{
+        write!(f, "{}, {:?}", self.name, self.stats)
     }
 }
 
