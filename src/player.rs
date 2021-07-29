@@ -53,6 +53,7 @@ impl Player{
         Player{name: name, stats: stats, inventory: inventory, rng: player_rng}
     }
     pub fn take(&mut self, item: Item){
+        println!("{} added to your inventory.", &item.name);
         self.inventory.push(item);
     }
     pub fn attack(&mut self) -> u8{

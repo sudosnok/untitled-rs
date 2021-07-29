@@ -130,18 +130,18 @@ impl Dungeon{
             _ => Room::new(),
         };
         for _ in 1..=self.rng.next_u32() % 4 { // for a random number between 0 and 3 inc.
-            match self.rng.next_u32() % 9 {
+            match self.rng.next_u32() % 21 {
                 0 => do_nothing(),  // satisfy the matching return types of each branch
-                1..=2 => {
+                1..=5 => {
                     paths.insert(String::from("north"), self.get_room());
                 },
-                3..=4 => {
+                6..=10 => {
                     paths.insert(String::from("east"), self.get_room());
                 },
-                5..=6 => {
+                11..=15 => {
                     paths.insert(String::from("south"), self.get_room());
                 },
-                7..=8 => {
+                16..=20 => {
                     paths.insert(String::from("west"), self.get_room());
                 },
                 _ => do_nothing(),
@@ -163,6 +163,13 @@ impl Dungeon{
             r
         } else {
             panic!("No rooms set.")
+        }
+    }
+    pub fn take_current_room(&mut self) -> Room{
+        if let Some(r) = self.room_map.remove(&String::from("current")){
+            r
+        } else {
+            panic!("No current room set, .remove failed");
         }
     }
 
@@ -187,10 +194,8 @@ impl Dungeon{
 
     pub fn print_paths(&self){
         print!("You can move : ");
-        for direction in self.room_map.keys().filter(|i| i != &&String::from("current")){
-            print!("{} ", direction);
-        }
-        println!("");
+        let paths = self.room_map.keys().filter(|i| i != &&String::from("current"));
+        println!("{:?}", paths);
     }
 
     pub fn move_to(&mut self, direction: &str){

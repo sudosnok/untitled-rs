@@ -22,6 +22,7 @@ fn main(){
     
 
     intro(d.current_room().desc.as_str());
+    d.print_paths();
     let _x = main_loop(d);
 }
 
@@ -60,6 +61,32 @@ fn main_loop(mut d: Dungeon) -> io::Result<()>{
                         }
                     }
                     
+                } else if input == "look around"{
+                    let len = d.current_room().items.len();
+                    println!("You rummage around the room, to find;");
+                    match len{
+                        1 => {
+                            let mut _room = d.take_current_room();
+                            let item = _room.items.remove(0);
+                            println!("{}", item);
+                            println!("Would you like to take the {}?", item);
+                            let mut temp = String::new();
+                            match io::stdin().read_line(&mut temp){
+                                Ok(_) => {
+                                    let _opt = temp.trim_end();
+                                    if _opt == "y" || _opt == "yes"{
+                                        d.player.take(item);
+                                    } else {
+                                        println!("You choose to leave the item in the room.");
+                                        _room.items.push(item);
+                                    }
+                                },
+                                Err(why) => panic!("Error : {}", why)
+                            }
+                            d.room_map.insert(String::from("current"), _room);
+                        },
+                        _ => println!("...nothing."),
+                    };
                 } else {
                     println!("{}", buffer)
                 }
@@ -70,6 +97,7 @@ fn main_loop(mut d: Dungeon) -> io::Result<()>{
         if running == false{
             break 'running
         }
+        d.print_paths();
     }
     Ok(())
 }

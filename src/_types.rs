@@ -10,7 +10,7 @@ use serde::Deserialize;
 
 #[derive(Debug)]
 #[derive(Deserialize)]
-pub struct Item{name: String, id: u8, value: u8}
+pub struct Item{pub name: String, pub id: u8, pub value: u8}
 #[allow(dead_code)]
 impl Item{
     pub fn new() -> Self{
